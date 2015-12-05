@@ -1,0 +1,40 @@
+using System.Threading.Tasks;
+using System.Net;
+using System;
+using System.IO;
+
+public class Startup
+{
+	public async Task<object> Invoke(object input)
+	{
+                return CallWebService((string)input);
+	}
+
+    private string CallWebService(string operation)
+    {
+        string result = "";
+        string URL_ADDRESS = "http://ec2-54-88-199-143.compute-1.amazonaws.com/chat_demo/script.php?message=" + operation;
+
+        // Create the web request
+        HttpWebRequest request = WebRequest.Create(new Uri(URL_ADDRESS)) as HttpWebRequest;
+
+        // Set type to POST
+        request.Method = "POST";
+
+        // Get response and return it
+        try
+        {
+            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            {
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                result = reader.ReadToEnd();
+                reader.Close();
+            }
+        }
+        catch (Exception e)
+        {
+            result = "an error occured";
+        }
+        return result;
+    }
+}

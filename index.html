@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<title>Chat Demo</title>
+
+		<link rel="stylesheet" type="text/css" href="style.css">
+
+	</head>
+
+	<body>
+
+		<section class="module">
+
+			<div id="wrapper">
+				<div id="header">
+					<header class="top-bar">
+	   	 				<h1>Chat Demo</h1>
+	  				</header>
+				</div>
+				<div id="content">
+					<ol id="messages"></ol>
+				</div>
+				<div id="footer">
+					<form id="form_id" action = "#">
+						<input id = "user_input"/>
+						<button id="btn_id">send</button>
+					</form>
+				</div>
+			</div>
+		</section>
+
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		<script>
+			var socket = io();
+
+			$("#form_id").submit(function(){
+				var value = $("#user_input").val();
+				if(value.length > 0 && value != "Default text"){
+					socket.emit('message from me', value);
+					$('#messages').append($('<li class="right">').text(value));
+					$('#user_input').val('');
+					scroll();
+				}
+				return false;
+			});
+
+			socket.on('message', function(msg){
+				$('#messages').append($('<li class="left">').text(msg));
+			});
+
+			function scroll() {
+				window.scrollTo(0, 999999);
+			};
+
+		</script>
+
+	</body>
+</html>
